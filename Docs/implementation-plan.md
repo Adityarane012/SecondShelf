@@ -194,35 +194,35 @@ frontmatter links field  →  list of related UUIDs above threshold 0.65
 ### Tasks
 
 #### 3.1 — Embedding Engine
-- [ ] Load model: `sentence-transformers` → `all-MiniLM-L6-v2` (downloads once, ~80MB)
-- [ ] `embed_text(text: str) → np.array` — embed a single note's content + summary
+- [x] Load model: `sentence-transformers` → `all-MiniLM-L6-v2` (downloads once, ~80MB)
+- [x] `embed_text(text: str) → np.array` — embed a single note's content + summary
 
 #### 3.2 — Persistence Layer
-- [ ] `load_embeddings() → dict` — load `embeddings.pkl` if exists, else return `{}`
-- [ ] `save_embeddings(store: dict)` — pickle to `embeddings.pkl`
+- [x] `load_embeddings() → dict` — load `embeddings.pkl` if exists, else return `{}`
+- [x] `save_embeddings(store: dict)` — pickle to `embeddings.pkl`
 
 #### 3.3 — Similarity & Linking
-- [ ] `find_related(uuid, store, threshold=0.65) → list[str]` — cosine similarity against all stored vectors, return UUIDs above threshold (excluding self)
-- [ ] `inject_links(uuid, related_uuids)` — read `.md`, update `links:` list in frontmatter, write back
-- [ ] Make links **bidirectional**: if A links to B, also add A to B's links
+- [x] `find_related(uuid, store, threshold=0.65) → list[str]` — cosine similarity against all stored vectors, return UUIDs above threshold (excluding self)
+- [x] `inject_links(uuid, related_uuids)` — read `.md`, update `links:` list in frontmatter, write back
+- [x] Make links **bidirectional**: if A links to B, also add A to B's links
 
 #### 3.4 — Incremental Update Pipeline
-- [ ] `link_all()` — for each note in `wiki/`:
+- [x] `link_all()` — for each note in `wiki/`:
   1. Embed if not already in store
   2. Find related notes
   3. Inject links into frontmatter
   4. Save updated `embeddings.pkl`
-- [ ] Skip notes where links are already populated (unless `--force` flag)
+- [x] Skip notes where links are already populated (unless `--force` flag)
 
 #### 3.5 — Real Data Test
-- [ ] Run on 15+ real items
-- [ ] Print link report: `note X linked to [Y, Z] (similarity: 0.78, 0.71)`
+- [x] Run on 15+ real items
+- [x] Print link report: `note X linked to [Y, Z] (similarity: 0.78, 0.71)`
 
 ### Acceptance Criteria
-- [ ] Embeddings computed per note
-- [ ] Related notes auto-linked (no manual tagging)
-- [ ] Bidirectional links exist in frontmatter
-- [ ] Runs on 15+ real items → organized `wiki/`
+- [x] Embeddings computed per note
+- [x] Related notes auto-linked (no manual tagging)
+- [x] Bidirectional links exist in frontmatter
+- [x] Runs on 15+ real items → organized `wiki/`
 
 ---
 
