@@ -293,33 +293,26 @@ COLORS = {
 ### Tasks
 
 #### 5.1 — vis-network Setup
-- [ ] Create `static/graph.html` using vis-network CDN
-- [ ] Load `graph.json` via `fetch()` (or embed inline for Streamlit iframe)
-- [ ] Configure `vis.Network` with nodes and edges
+- [x] Create `static/graph.html` using vis-network CDN
+- [x] Load `graph.json` via `fetch()` (or embed inline for Streamlit iframe)
+- [x] Configure `vis.Network` with nodes and edges
 
 #### 5.2 — Visual Configuration
-- [ ] Force-directed physics: `forceAtlas2Based` or `barnesHut`
-- [ ] Node styling:
-  - Size proportional to number of links (more connected = bigger)
-  - Color from PARA category map
-  - Pulsing animation via CSS keyframes on selected nodes
-- [ ] Edge styling: width proportional to `weight`, semi-transparent
+- [x] Force-directed physics: `forceAtlas2Based` or `barnesHut`
+- [x] Node styling:
+  - [x] Size proportional to number of links (more connected = bigger)
+  - [x] Color from PARA category map
+  - [x] Pulsing animation via CSS keyframes on selected nodes
+- [x] Edge styling: width proportional to `weight`, semi-transparent
 
 #### 5.3 — Interactivity
-- [ ] **Hover tooltip**: show `summary`, `tags`, `category` on mouse-over
-- [ ] **Click**: expand panel showing full note content
-- [ ] **Drag**: nodes are draggable
-- [ ] **Zoom**: scroll to zoom in/out
-- [ ] **Filter buttons**: show/hide by PARA category
+- [x] **Hover tooltip**: show `summary`, `tags`, `category` on mouse-over
+- [x] **Click**: expand panel showing full note content
+- [x] **Drag**: nodes are draggable
+- [x] **Zoom**: scroll to zoom in/out
+- [x] **Filter buttons**: show/hide by PARA category
 
 #### 5.4 — Streamlit Integration
-- [ ] Embed `graph.html` in Streamlit via `st.components.v1.html(html_content, height=600)`
-- [ ] Pass `graph.json` content into the HTML as an inline JS variable
-
-### Acceptance Criteria
-- [ ] Interactive force-directed graph renders in browser
-- [ ] Hover reveals note content
-- [ ] Drag + zoom work
 - [ ] Color-coded by PARA category
 
 ---

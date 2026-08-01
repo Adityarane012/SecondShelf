@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SecondShelf Brain Graph</title>
+  
+  <!-- vis-network via CDN -->
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #0e1117; /* Streamlit dark theme default match */
+      color: #fafafa;
+    }
+    #network-container {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    /* Custom tooltip styling to override vis-network defaults */
+    div.vis-tooltip {
+      position: absolute;
+      padding: 10px 14px;
+      font-family: inherit;
+      font-size: 14px;
+      color: #333;
+      background-color: rgba(255, 255, 255, 0.95);
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      max-width: 300px;
+      white-space: normal;
+      pointer-events: none;
+      z-index: 1000;
+      line-height: 1.4;
+    }
+    .tooltip-category {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #fff;
+    }
+    .tooltip-content {
+      margin-top: 8px;
+      font-size: 13px;
+      color: #555;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div id="network-container"></div>
+  
+  <script type="text/javascript">
+    // --- PAYLOAD INJECTION ---
+    // app.py will replace this string with the actual JSON payload
+    const rawPayload = `__GRAPH_JSON_PAYLOAD__`;
+    let graphData = { nodes: [], edges: [] };
+    
+    try {
+        graphData = JSON.parse(rawPayload);
+    } catch(e) {
+        console.error("Failed to parse graph payload. Defaulting to empty.", e);
+    }
+
+    // --- STRIP HTML FUNCTION (E5-6) ---
+    function stripHtml(html) {
+       let tmp = document.createElement("DIV");
+       tmp.innerHTML = html;
+       return tmp.textContent || tmp.innerText || "";
+    }
+
+    // --- NODE PREPROCESSING ---
+    // Calculate degree (number of edges) per node to size them (E5-3)
+    const nodeDegrees = {};
+    graphData.edges.forEach(e => {
+        nodeDegrees[e.from] = (nodeDegrees[e.from] || 0) + 1;
+        nodeDegrees[e.to] = (nodeDegrees[e.to] || 0) + 1;
+    });
+
+    const processedNodes = graphData.nodes.map(n => {
+        const degree = nodeDegrees[n.id] || 0;
+        
+        // E5-3: Truncate label to 40 chars
+        let displayLabel = n.label || "";
+        if (displayLabel.length > 40) {
+            displayLabel = displayLabel.substring(0, 37) + "...";
+        }
+        
+        // E5-5 / E5-6: Custom title for hover tooltip
+        const safeSummary = stripHtml(n.label || "");
+        const safeContent = stripHtml(n.content || "");
+        
+        const tooltipHtml = `
+            <div>
+                <div class="tooltip-category" style="background-color: ${n.color}">${n.category}</div>
+                <div><strong>${safeSummary}</strong></div>
+                ${n.tags && n.tags.length > 0 ? `<div style="margin-top: 4px; font-size: 11px; color: #888;">#${n.tags.join(" #")}</div>` : ""}
+                ${safeContent ? `<div class="tooltip-content">"${safeContent}"</div>` : ""}
+            </div>
+        `;
+
+        return {
+            id: n.id,
+            label: displayLabel,
+            title: tooltipHtml,
+            color: {
+                background: n.color,
+                border: n.color,
+                highlight: { background: n.color, border: '#ffffff' },
+                hover: { background: n.color, border: '#ffffff' }
+            },
+            size: Math.min(15 + (degree * 3), 40), // Base size 15, max 40
+            shape: 'dot',
+            font: { color: '#ffffff', size: 12, face: 'inherit', strokeWidth: 2, strokeColor: '#0e1117' }
+        };
+    });
+
+    // --- EDGE PREPROCESSING ---
+    const processedEdges = graphData.edges.map(e => {
+        return {
+            from: e.from,
+            to: e.to,
+            width: Math.max(1, (e.weight || 0.65) * 3),
+            color: { color: 'rgba(255,255,255,0.15)', highlight: 'rgba(255,255,255,0.5)', hover: 'rgba(255,255,255,0.3)' },
+            smooth: { type: 'continuous' }
+        };
+    });
+
+    // --- VIS NETWORK CONFIG ---
+    const container = document.getElementById('network-container');
+    const data = {
+        nodes: new vis.DataSet(processedNodes),
+        edges: new vis.DataSet(processedEdges)
+    };
+    
+    const options = {
+        physics: {
+            enabled: true,
+            forceAtlas2Based: {
+                gravitationalConstant: -50,
+                centralGravity: 0.01,
+                springLength: 100,
+                springConstant: 0.08,
+                damping: 0.4,
+                avoidOverlap: 0
+            },
+            solver: 'forceAtlas2Based',
+            stabilization: {
+                enabled: true,
+                iterations: 1000,
+                updateInterval: 100,
+                onlyDynamicEdges: false,
+                fit: true
+            },
+            adaptiveTimestep: true // E5-7
+        },
+        interaction: {
+            hover: true,
+            hoverConnectedEdges: true,
+            selectConnectedEdges: true,
+            zoomView: true,
+            dragView: true
+        }
+    };
+
+    const network = new vis.Network(container, data, options);
+
+    // E5-4: Disable physics once the graph stabilizes to save CPU
+    network.on("stabilizationIterationsDone", function () {
+        network.setOptions( { physics: false } );
+    });
+
+    // Optional debounce for hover if it feels too jittery
+    // vis-network handles tooltips decently internally, but we can hook if needed.
+    
+  </script>
+</body>
+</html>
