@@ -1,0 +1,9 @@
+groq
+sentence-transformers
+scikit-learn
+numpy
+python-frontmatter
+python-dotenv
+streamlit
+requests
+beautifulsoup4

@@ -1,0 +1,41 @@
+# ======================
+# Secrets — never commit
+# ======================
+.env
+
+# ======================
+# Generated data files
+# ======================
+embeddings.pkl
+graph.json
+raw/*
+!raw/.gitkeep
+wiki/*
+!wiki/.gitkeep
+
+# ======================
+# Python
+# ======================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ======================
+# Virtual environment
+# ======================
+venv/
+.venv/
+env/
+
+# ======================
+# IDE / OS
+# ======================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

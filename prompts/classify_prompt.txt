@@ -1,0 +1,8 @@
+Classify the following note using the PARA framework.
+PARA categories: Projects (has deadline/goal), Areas (ongoing responsibility), Resources (reference material), Archives (completed/inactive).
+
+Return ONLY valid JSON in this exact format:
+{"category": "...", "tags": ["...", "..."], "summary": "one line"}
+
+Note content:
+{content}
