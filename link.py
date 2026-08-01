@@ -15,6 +15,8 @@ import sys
 from pathlib import Path
 import frontmatter
 
+import utils
+
 # Force UTF-8 output on Windows
 if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -27,34 +29,6 @@ EMBEDDINGS_FILE = BASE_DIR / "embeddings.pkl"
 MODEL_NAME = "all-MiniLM-L6-v2"
 SIMILARITY_THRESHOLD = 0.65
 MAX_LINKS_PER_NOTE = 5
-
-_model_instance = None
-
-def get_model():
-    """Lazy load sentence-transformers model (E3-1)."""
-    global _model_instance
-    if _model_instance is None:
-        try:
-            # We import here so the CLI boots fast if no embedding is needed
-            from sentence_transformers import SentenceTransformer
-            import urllib.request
-            # Check for internet to warn (E3-1)
-            try:
-                urllib.request.urlopen("https://huggingface.co", timeout=3)
-            except Exception:
-                print(f"⚠ Warning: Offline mode. Loading model from cache (if available).")
-                print(f"If this crashes, run with an internet connection first to download the model (~80MB).")
-                
-            _model_instance = SentenceTransformer(MODEL_NAME)
-        except OSError as e:
-            print(f"Error loading model '{MODEL_NAME}': {e}")
-            print("Run with an internet connection first to download the model (~80MB).")
-            sys.exit(1)
-        except ImportError:
-            print("Error: sentence-transformers not installed. Run: pip install sentence-transformers")
-            sys.exit(1)
-    return _model_instance
-
 
 def load_embeddings() -> dict:
     """Load embeddings.pkl if exists, else return {}. Handles corruption (E3-7)."""
@@ -92,7 +66,7 @@ def get_wiki_notes() -> list[Path]:
 
 
 def embed_note(uuid: str, fm_post: frontmatter.Post) -> object:
-    """Compute embedding for a single note (E3-2). Returns numpy array or tensor."""
+    """Compute embedding for a single note (E3-2). Returns python list."""
     # Combine summary and content to maximize context
     summary = fm_post.metadata.get("summary", "")
     content = fm_post.content or ""
@@ -102,8 +76,7 @@ def embed_note(uuid: str, fm_post: frontmatter.Post) -> object:
     if not text:
         return None
         
-    model = get_model()
-    return model.encode(text)
+    return utils.embed_text(text)
 
 
 def link_all(force: bool = False):

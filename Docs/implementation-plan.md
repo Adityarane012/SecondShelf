@@ -337,21 +337,21 @@ def ask(question: str) -> dict:
 ### Tasks
 
 #### 6.1 — Query Embedding
-- [ ] Reuse `embed_text()` from `link.py` (extract to shared `utils.py`)
-- [ ] Embed the incoming question
+- [x] Reuse `embed_text()` from `link.py` (extract to shared `utils.py`)
+- [x] Embed the incoming question
 
 #### 6.2 — Top-K Retrieval
-- [ ] Load `embeddings.pkl`
-- [ ] Cosine similarity: question vector vs. all note vectors
-- [ ] Return top-`TOP_K_RESULTS` (default 5) note UUIDs, sorted by score
+- [x] Load `embeddings.pkl`
+- [x] Cosine similarity: question vector vs. all note vectors
+- [x] Return top-`TOP_K_RESULTS` (default 5) note UUIDs, sorted by score
 
 #### 6.3 — Context Assembly
-- [ ] Read full content of top-K notes from `wiki/`
-- [ ] Build context string (trim to ~3000 tokens to respect LLM context window)
-- [ ] Format: `[Note 1 - <summary>]: <content>\n[Note 2 - ...]`
+- [x] Read full content of top-K notes from `wiki/`
+- [x] Build context string (trim to ~3000 tokens to respect LLM context window)
+- [x] Format: `[Note 1 - <summary>]: <content>\n[Note 2 - ...]`
 
 #### 6.4 — LLM Synthesis
-- [ ] Create `prompts/ask_prompt.txt`:
+- [x] Create `prompts/ask_prompt.txt`:
   ```
   You are a personal knowledge assistant. Answer the user's question using
   ONLY the notes provided below. Do not use outside knowledge.
@@ -363,18 +363,18 @@ def ask(question: str) -> dict:
   Notes:
   {context}
   ```
-- [ ] Call Groq (`llama3-8b-8192`) with assembled prompt
-- [ ] Return answer + structured source list
+- [x] Call Groq (`llama3-8b-8192`) with assembled prompt
+- [x] Return answer + structured source list
 
 #### 6.5 — Testing
-- [ ] Test against 5+ real questions about your captured notes
-- [ ] Verify citations are accurate
-- [ ] Tune `TOP_K_RESULTS` and context truncation
+- [x] Test against 5+ real questions about your captured notes
+- [x] Verify citations are accurate
+- [x] Tune `TOP_K_RESULTS` and context truncation
 
 ### Acceptance Criteria
-- [ ] `ask()` returns synthesized answer from real notes
-- [ ] Source citations reference actual note UUIDs/summaries
-- [ ] Works on retrieval + LLM in sequence
+- [x] `ask()` returns synthesized answer from real notes
+- [x] Source citations reference actual note UUIDs/summaries
+- [x] Works on retrieval + LLM in sequence
 
 ---
 
