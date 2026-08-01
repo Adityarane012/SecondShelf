@@ -264,23 +264,23 @@ COLORS = {
 ### Tasks
 
 #### 4.1 — Node Builder
-- [ ] `build_nodes() → list[dict]` — parse each `wiki/*.md` via `python-frontmatter`
-- [ ] Map `category` → `color` using `COLORS` dict
-- [ ] Include `content` field (note body, truncated to 500 chars for hover)
+- [x] `build_nodes() → list[dict]` — parse each `wiki/*.md` via `python-frontmatter`
+- [x] Map `category` → `color` using `COLORS` dict
+- [x] Include `content` field (note body, truncated to 500 chars for hover)
 
 #### 4.2 — Edge Builder
-- [ ] `build_edges(nodes) → list[dict]` — for each node, iterate `links` in frontmatter
-- [ ] Deduplicate edges (A→B and B→A should be one edge)
-- [ ] Add `weight` field from cosine similarity (read from embeddings store)
+- [x] `build_edges(nodes) → list[dict]` — for each node, iterate `links` in frontmatter
+- [x] Deduplicate edges (A→B and B→A should be one edge)
+- [x] Add `weight` field from cosine similarity (read from embeddings store)
 
 #### 4.3 — Export
-- [ ] `export_graph(nodes, edges)` → write to `graph.json` (pretty-printed)
-- [ ] Print stats: `Graph: N nodes, E edges`
+- [x] `export_graph(nodes, edges)` → write to `graph.json` (pretty-printed)
+- [x] Print stats: `Graph: N nodes, E edges`
 
 ### Acceptance Criteria
-- [ ] Script builds nodes + edges from all notes in `wiki/`
-- [ ] Exports clean `graph.json`
-- [ ] Built from real notes, not dummy data
+- [x] Script builds nodes + edges from all notes in `wiki/`
+- [x] Exports clean `graph.json`
+- [x] Built from real notes, not dummy data
 
 ---
 
